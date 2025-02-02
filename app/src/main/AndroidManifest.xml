@@ -13,6 +13,27 @@
         android:theme="@style/Theme.Hotelio"
         tools:targetApi="31">
         <activity
+            android:name=".ProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PaymentManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OrdersActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MenuManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TableManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".HotelDetailsActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeMainPage"
             android:exported="false" />
         <activity

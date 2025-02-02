@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_hotel_details"
+        android:title="Hotel Details"
+        android:icon="@drawable/baseline_hotel_24" />
+
+    <item
+        android:id="@+id/nav_table_management"
+        android:title="Table Management"
+        android:icon="@drawable/baseline_table_restaurant_24" />
+
+    <item
+        android:id="@+id/nav_menu_management"
+        android:title="Menu Management"
+        android:icon="@drawable/baseline_restaurant_menu_24" />
+
+    <item
+        android:id="@+id/nav_orders"
+        android:title="Orders"
+        android:icon="@drawable/baseline_format_list_numbered_rtl_24" />
+
+    <item
+        android:id="@+id/nav_payment_management"
+        android:title="Payment Management"
+        android:icon="@drawable/baseline_payment_24" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:title="Settings"
+        android:icon="@drawable/baseline_settings_24" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:title="Profile"
+        android:icon="@drawable/baseline_person_24" />
+</menu>
