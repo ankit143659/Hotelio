@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/nav_header_image"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="104dp"
+        android:layout_height="104dp"
         android:layout_gravity="center_horizontal"
         android:src="@drawable/logo"/>
 

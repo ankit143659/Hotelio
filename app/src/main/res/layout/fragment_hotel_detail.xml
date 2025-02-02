@@ -1,14 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HotelDetail">
+    android:fillViewport="true"
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-</FrameLayout>
+        <!-- CardView for Hotel Logo -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/main5"
+                android:padding="10dp"
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/hotel_logo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/logo"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="center" />
+
+                <Button
+                    android:id="@+id/btn_upload_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:text="Upload Logo"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/main4"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- CardView for Hotel Details -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
+            android:layout_marginTop="20dp"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@color/main1"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/et_hotel_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Hotel Name"
+                    android:textColor="@color/black"
+                    android:textSize="17sp"
+                    android:textColorHint="@color/black"
+                    android:padding="10dp"
+                    android:background="@drawable/edittext_background"/>
+
+                <EditText
+                    android:id="@+id/et_hotel_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Hotel Address"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:padding="10dp"
+                    android:textSize="17sp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edittext_background"/>
+
+                <EditText
+                    android:id="@+id/et_hotel_contact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Contact Number"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:inputType="phone"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edittext_background"/>
+
+                <EditText
+                    android:id="@+id/et_hotel_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email Address"
+                    android:inputType="textEmailAddress"
+                    android:textSize="17sp"
+                    android:padding="10dp"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edittext_background"/>
+
+                <EditText
+                    android:id="@+id/et_hotel_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:hint="Hotel Description"
+                    android:inputType="textMultiLine"
+                    android:textSize="17sp"
+                    android:minLines="3"
+                    android:maxLines="5"
+                    android:padding="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/edittext_background"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- CardView for Opening & Closing Time -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="8dp"
+            android:layout_marginTop="20dp"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:background="@color/main1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:text="Opening Time"
+                    android:textStyle="bold"/>
+
+                <Button
+                    android:id="@+id/btn_open_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:textSize="17sp"
+                    android:text="Select Opening Time"
+                    android:backgroundTint="@color/main5"
+                    android:layout_marginTop="5dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Closing Time"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_marginTop="10dp"/>
+
+                <Button
+                    android:id="@+id/btn_close_time"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/black"
+                    android:textColorHint="@color/black"
+                    android:layout_height="wrap_content"
+                    android:textSize="17sp"
+                    android:text="Select Closing Time"
+                    android:backgroundTint="@color/main5"
+                    android:layout_marginTop="5dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/btn_save_hotel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Details"
+            android:backgroundTint="@color/main1"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:layout_marginTop="20dp"/>
+
+    </LinearLayout>
+</ScrollView>
