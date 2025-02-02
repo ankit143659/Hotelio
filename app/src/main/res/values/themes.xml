@@ -4,8 +4,8 @@
         <item name="colorPrimary">@color/main1</item> <!-- Change the primary color -->
         <item name="colorPrimaryDark">@color/main1</item> <!-- Dark color for status bar -->
         <item name="colorAccent">@color/main1</item> <!-- Accent color -->
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="windowActionBar">false</item> <!-- Disables the action bar -->
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Theme.Hotelio" parent="Base.Theme.Hotelio" />

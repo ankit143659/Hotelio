@@ -22,6 +22,7 @@ class LoginPage : AppCompatActivity() {
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var loginBtn : Button
+    private lateinit var share : SharePrefrence
 
     private lateinit var lottieAnimationView: LottieAnimationView
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,7 @@ class LoginPage : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         database = FirebaseDatabase.getInstance().reference
+        share = SharePrefrence(this)
 
         email = findViewById(R.id.etEmail)
         password = findViewById(R.id.Password)
@@ -59,6 +61,7 @@ class LoginPage : AppCompatActivity() {
                 .addOnCompleteListener(this){task->
                     if (task.isSuccessful){
                         Toast.makeText(this,"Login Successfull",Toast.LENGTH_SHORT).show()
+                        movetoNextScreen()
                     }else{
                         Toast.makeText(this,"Login Failed",Toast.LENGTH_SHORT).show()
                     }
@@ -67,5 +70,11 @@ class LoginPage : AppCompatActivity() {
             Toast.makeText(this,"Please Fill all details",Toast.LENGTH_SHORT).show()
         }
 
+    }
+
+    private fun movetoNextScreen() {
+        share.loginState(true)
+        val intent = Intent(this,SlideShow::class.java)
+        startActivity(intent)
     }
 }
