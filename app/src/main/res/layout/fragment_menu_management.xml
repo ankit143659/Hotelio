@@ -1,14 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MenuManagement">
+    android:padding="16dp"
+    android:background="@color/white">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <LinearLayout
+            android:id="@+id/menuContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <!-- Add Menu Button -->
+        <Button
+            android:id="@+id/btnAddMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Menu"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/main1"
+            android:layout_marginTop="10dp"/>
+
+        <!-- Add More Category Button -->
+        <Button
+            android:id="@+id/btnAddCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add More Category"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/main3"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"/> <!-- Initially hidden -->
+
+        <!-- Save Menu Button -->
+        <Button
+            android:id="@+id/btnSaveMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Menu"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/main2"
+            android:layout_marginTop="20dp"
+            android:visibility="gone"/>  <!-- Initially hidden -->
+
+    </LinearLayout>
+</ScrollView>
