@@ -50,7 +50,23 @@ class TableManagement : Fragment() {
             showTableDialog()
         }
 
+        fetchStoredTables()
+
         return view
+    }
+
+    private fun fetchStoredTables() {
+        database.child("hotels").child(userId).child("tables").get().addOnSuccessListener { snapshot ->
+            if (snapshot.exists()) {
+                snapshot.children.forEach { table ->
+                    val tableName = table.key ?: return@forEach
+                    val tableNumber = tableName.replace("Table", "").toIntOrNull() ?: return@forEach
+                    addTableView(tableNumber)
+                }
+            }
+        }.addOnFailureListener {
+            Toast.makeText(requireContext(), "Failed to load tables", Toast.LENGTH_SHORT).show()
+        }
     }
 
     @SuppressLint("MissingInflatedId")
@@ -65,19 +81,32 @@ class TableManagement : Fragment() {
             .setCancelable(false)
             .create()
 
-        btnCancel.setOnClickListener { dialog.dismiss() }
         btnAdd.setOnClickListener {
             val count = etTableCount.text.toString().toIntOrNull()
             if (count != null && count > 0) {
+                val tablesMap = mutableMapOf<String, Boolean>()
                 for (i in 1..count) {
-                    addTableView(tableCount + i)
+                    val tableNumber = tableCount + i
+                    addTableView(tableNumber)
+                    tablesMap["Table$tableNumber"] = true  // Store table as a key in Firebase
                 }
                 tableCount += count
+
+                // Store in Firebase under the user's hotel
+                database.child("hotels").child(userId).child("tables").setValue(tablesMap)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Tables added successfully!", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener {
+                        Toast.makeText(requireContext(), "Failed to add tables", Toast.LENGTH_SHORT).show()
+                    }
+
                 dialog.dismiss()
             } else {
                 etTableCount.error = "Enter a valid number"
             }
         }
+
         dialog.show()
     }
 
@@ -95,7 +124,7 @@ class TableManagement : Fragment() {
 
         btnGenerateQR.setOnClickListener {
 
-            val qrData = "https://comfy-narwhal-3154a6.netlify.app/?hotelUid=$userId&tableNo=1"
+            val qrData = "https://lucky-lollipop-fa2d9b.netlify.app/?hotelUid=$userId&tableNo=$tableNumber"
             val qrCodeBitmap = generateQRCode(qrData)
 
             // Save the QR code to the gallery
