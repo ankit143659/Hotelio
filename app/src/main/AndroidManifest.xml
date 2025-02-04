@@ -2,6 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32"
+        tools:ignore="ScopedStorage" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,27 +19,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Hotelio"
         tools:targetApi="31">
-        <activity
-            android:name=".ProfileActivity"
-            android:exported="false" />
-        <activity
-            android:name=".SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".PaymentManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".OrdersActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MenuManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".TableManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".HotelDetailsActivity"
-            android:exported="false" />
         <activity
             android:name=".HomeMainPage"
             android:exported="false" />

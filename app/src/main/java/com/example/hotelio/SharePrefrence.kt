@@ -17,4 +17,14 @@ class SharePrefrence (context: Context){
         return prefs.getBoolean("Login",false)
     }
 
+    fun userUID(uid : String){
+        val editor = prefs.edit()
+        editor.putString("uid",uid)
+        editor.apply()
+    }
+
+    fun UserUid(): String? {
+        return prefs.getString("uid","123456")
+    }
+
 }

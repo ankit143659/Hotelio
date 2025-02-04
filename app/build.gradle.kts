@@ -47,6 +47,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
     implementation(libs.firebase.auth)
+    implementation (libs.core)
+    implementation (libs.zxing.android.embedded)
     testImplementation(libs.junit)
     implementation(libs.lottie)
     androidTestImplementation(libs.androidx.junit)

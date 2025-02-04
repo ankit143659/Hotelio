@@ -61,6 +61,9 @@ class LoginPage : AppCompatActivity() {
                 .addOnCompleteListener(this){task->
                     if (task.isSuccessful){
                         Toast.makeText(this,"Login Successfull",Toast.LENGTH_SHORT).show()
+                        val user = auth.currentUser
+                        val userId = user?.uid
+                        share.userUID(userId.toString())
                         movetoNextScreen()
                     }else{
                         Toast.makeText(this,"Login Failed",Toast.LENGTH_SHORT).show()

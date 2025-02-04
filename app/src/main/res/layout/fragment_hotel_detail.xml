@@ -198,6 +198,28 @@
             android:textColor="@color/black"
             android:textColorHint="@color/black"
             android:layout_marginTop="20dp"/>
+        <Button
+            android:id="@+id/btn_update_hotel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Update Details"
+            android:backgroundTint="@color/main1"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:layout_marginTop="20dp"/>
+        <Button
+            android:id="@+id/btn_delete_hotel"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:text="Delete Details"
+            android:backgroundTint="@color/main1"
+            android:textSize="17sp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
+            android:layout_marginTop="20dp"/>
 
     </LinearLayout>
 </ScrollView>
