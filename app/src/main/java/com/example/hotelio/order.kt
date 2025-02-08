@@ -1,59 +1,157 @@
 package com.example.hotelio
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import com.google.firebase.database.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [order.newInstance] factory method to
- * create an instance of this fragment.
- */
 class order : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var ordersContainer: LinearLayout
+    private lateinit var database: DatabaseReference
+    private lateinit var share : SharePrefrence
+    private lateinit var hotelUid : String// Replace with dynamic UID
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_order, container, false)
+        val view = inflater.inflate(R.layout.fragment_order, container, false)
+        ordersContainer = view.findViewById(R.id.ordersContainer)
+        share = SharePrefrence(requireContext())
+        hotelUid = share.UserUid().toString()
+
+        database = FirebaseDatabase.getInstance().reference.child("Orders").child(hotelUid)
+
+        fetchOrders()
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment order.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            order().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private var ordersListener: ValueEventListener? = null
+
+    private fun fetchOrders() {
+        ordersListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!isAdded || context == null) return  // Prevent crash if fragment is detached
+
+                ordersContainer.removeAllViews()
+
+                val ordersList = mutableListOf<Pair<Long, DataSnapshot>>()
+
+                for (tableSnapshot in snapshot.children) {
+                    for (orderSnapshot in tableSnapshot.children) {
+                        val timestamp = orderSnapshot.child("timestamp").value.toString()
+                        val timeInMillis = parseTimestamp(timestamp)
+                        ordersList.add(Pair(timeInMillis, orderSnapshot))
+                    }
+                }
+
+                ordersList.sortByDescending { it.first }
+
+                for ((_, orderSnapshot) in ordersList) {
+                    val orderId = orderSnapshot.key!!
+                    displayOrder(orderId, orderSnapshot)
                 }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Error: ${error.message}")
+            }
+        }
+
+        database.addValueEventListener(ordersListener!!)
     }
+
+    // Remove listener when fragment is destroyed
+    override fun onDestroyView() {
+        super.onDestroyView()
+        ordersListener?.let { database.removeEventListener(it) }
+    }
+
+
+    private fun parseTimestamp(timestamp: String): Long {
+        return try {
+            val format = SimpleDateFormat("d/M/yyyy, hh:mm:ss a", Locale.getDefault())
+            format.parse(timestamp)?.time ?: 0L  // Convert timestamp to milliseconds
+        } catch (e: Exception) {
+            println("Timestamp parsing error: ${e.message}")
+            0L
+        }
+    }
+
+    @SuppressLint("MissingInflatedId")
+    private fun displayOrder(orderId: String, orderSnapshot: DataSnapshot) {
+        if (!isAdded || context == null) return  // Prevent crash if fragment is detached
+
+        val inflater = LayoutInflater.from(requireContext()) // Safe usage now
+        val orderView = inflater.inflate(R.layout.order_item, ordersContainer, false)
+
+        val tableNoText = orderView.findViewById<TextView>(R.id.tableNoText)
+        val itemDetailsText = orderView.findViewById<TextView>(R.id.itemDetailsText)
+        val priceText = orderView.findViewById<TextView>(R.id.priceText)
+        val confirmBtn = orderView.findViewById<Button>(R.id.confirmBtn)
+        val rejectBtn = orderView.findViewById<Button>(R.id.rejectBtn)
+        val deleteBtn = orderView.findViewById<Button>(R.id.deleteBtn)
+
+        val tableNo = orderSnapshot.child("tableNo").value.toString()
+        val status = orderSnapshot.child("status").value.toString()
+
+        val items = orderSnapshot.child("items").children.map { itemSnapshot ->
+            val itemName = itemSnapshot.child("item").value.toString()
+            val quantity = itemSnapshot.child("quantity").value.toString()
+            val price = itemSnapshot.child("total").value.toString().toInt()
+            Triple(itemName, quantity, price)
+        }
+
+        tableNoText.text = "Table No: $tableNo"
+        itemDetailsText.text = items.joinToString("\n") { "${it.first} x${it.second}" }
+        priceText.text = "₹${items.sumOf { it.third }}"
+
+
+        when (status) {
+            "confirmed" -> {
+                confirmBtn.text = "Confirmed"
+                confirmBtn.isEnabled = false
+                confirmBtn.setBackgroundColor(Color.GRAY)
+                rejectBtn.visibility = View.GONE
+                deleteBtn.visibility=View.VISIBLE
+            }
+            "rejected" -> {
+                rejectBtn.text = "Rejected"
+                rejectBtn.isEnabled = false
+                rejectBtn.setBackgroundColor(Color.GRAY)
+                confirmBtn.visibility=View.GONE
+                deleteBtn.visibility=View.VISIBLE
+            }
+        }
+
+        confirmBtn.setOnClickListener {
+            database.child(tableNo).child(orderId).child("status").setValue("confirmed")
+        }
+        deleteBtn.setOnClickListener{
+            database.child(tableNo).child(orderId).removeValue().addOnCompleteListener {
+                if (it.isSuccessful) {
+                    ordersContainer.removeView(orderView)
+                }
+            }
+        }
+        rejectBtn.setOnClickListener {
+            database.child(tableNo).child(orderId).child("status").setValue("rejected")
+        }
+
+        ordersContainer.addView(orderView, 0)
+        ordersContainer.invalidate()
+        ordersContainer.requestLayout()
+    }
+
 }

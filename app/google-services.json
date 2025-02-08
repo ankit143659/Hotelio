@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "670092583330",
+    "project_id": "hotelio-4ebc9",
+    "storage_bucket": "hotelio-4ebc9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:670092583330:android:600641ab5be448731152fb",
+        "android_client_info": {
+          "package_name": "com.example.hotelio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9uz1VE4aVsfmTiFXQt0APpi7sP54VF4k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
