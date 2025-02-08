@@ -124,7 +124,7 @@ class TableManagement : Fragment() {
 
         btnGenerateQR.setOnClickListener {
 
-            val qrData = "https://inquisitive-daffodil-0df47b.netlify.app/?hotelUid=$userId&tableNo=$tableNumber"
+            val qrData = "https://ornate-kitten-246a60.netlify.app/?hotelUid=$userId&tableNo=$tableNumber"
             val qrCodeBitmap = generateQRCode(qrData)
 
             // Save the QR code to the gallery

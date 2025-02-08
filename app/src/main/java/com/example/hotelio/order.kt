@@ -31,7 +31,9 @@ class order : Fragment() {
         share = SharePrefrence(requireContext())
         hotelUid = share.UserUid().toString()
 
-        database = FirebaseDatabase.getInstance().reference.child("Orders").child(hotelUid)
+        database = FirebaseDatabase.getInstance().reference.child("hotels")
+            .child(hotelUid)
+            .child("Orders")
 
         fetchOrders()
         return view
@@ -42,35 +44,43 @@ class order : Fragment() {
     private fun fetchOrders() {
         ordersListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if (!isAdded || context == null) return  // Prevent crash if fragment is detached
+                if (!isAdded || context == null) return
+
+
+                if (!snapshot.exists()) {
+                    Toast.makeText(requireContext(), "No Orders Found!", Toast.LENGTH_LONG).show()
+                    return
+                }
 
                 ordersContainer.removeAllViews()
-
                 val ordersList = mutableListOf<Pair<Long, DataSnapshot>>()
 
                 for (tableSnapshot in snapshot.children) {
                     for (orderSnapshot in tableSnapshot.children) {
-                        val timestamp = orderSnapshot.child("timestamp").value.toString()
+                        val timestamp = orderSnapshot.child("timestamp").value?.toString() ?: "0"
                         val timeInMillis = parseTimestamp(timestamp)
                         ordersList.add(Pair(timeInMillis, orderSnapshot))
                     }
                 }
 
                 ordersList.sortByDescending { it.first }
-
                 for ((_, orderSnapshot) in ordersList) {
-                    val orderId = orderSnapshot.key!!
-                    displayOrder(orderId, orderSnapshot)
+                    orderSnapshot.key?.let { orderId -> displayOrder(orderId, orderSnapshot) }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                println("Error: ${error.message}")
             }
         }
 
-        database.addValueEventListener(ordersListener!!)
+        val ordersRef = FirebaseDatabase.getInstance().reference
+            .child("hotels")
+            .child(hotelUid)
+            .child("Orders")
+
+        ordersRef.addValueEventListener(ordersListener!!)
     }
+
 
     // Remove listener when fragment is destroyed
     override fun onDestroyView() {
