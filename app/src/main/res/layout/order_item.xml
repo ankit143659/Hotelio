@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@drawable/edit_text_bg"
+    android:background="@drawable/edit_text_effective"
     android:elevation="4dp"
     android:layout_margin="8dp">
 
@@ -55,7 +55,7 @@
             android:layout_marginRight="10dp"
             android:textSize="15sp"
             android:text="Confirm"
-            android:backgroundTint="@color/main1"
+            android:backgroundTint="@color/main5"
             android:textColor="@color/white" />
 
 

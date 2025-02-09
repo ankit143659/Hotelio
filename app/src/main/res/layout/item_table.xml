@@ -9,45 +9,66 @@
 
    <LinearLayout
        android:layout_width="match_parent"
-       android:orientation="horizontal"
-       android:background="@color/main1"
+       android:orientation="vertical"
+       android:background="@drawable/edit_text_effective"
        android:padding="10dp"
        android:layout_height="wrap_content">
 
-       <!-- Table Number -->
-       <TextView
-           android:id="@+id/tvTableNumber"
+       <LinearLayout
            android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:layout_weight="1"
-           android:text="Table 1"
-           android:textSize="18sp"
-           android:textStyle="bold"
-           android:textColor="@android:color/black"
-           android:padding="8dp" />
+           android:orientation="horizontal"
+           android:layout_height="wrap_content">
 
-       <!-- Generate QR Code Button -->
-       <Button
-           android:id="@+id/btnGenerateQr"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Generate QR"
-           android:layout_marginLeft="20dp"
-           android:padding="8dp"
-           android:backgroundTint="@color/main3"
-           android:textColor="@android:color/white"
-           android:layout_marginEnd="10dp"/>
+           <TextView
+               android:id="@+id/tvTableNumber"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_weight="1"
+               android:text="Table 1"
+               android:textSize="18sp"
+               android:textStyle="bold"
+               android:textColor="@android:color/black"
+               android:padding="8dp" />
 
-       <!-- Remove Table Button -->
-       <Button
-           android:id="@+id/btnRemoveTable"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:text="Remove"
-           android:padding="8dp"
-           android:backgroundTint="@android:color/holo_red_dark"
-           android:textColor="@android:color/white" />
+           <!-- Generate QR Code Button -->
+           <Button
+               android:id="@+id/btnGenerateQr"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Generate QR"
+               android:layout_marginLeft="20dp"
+               android:padding="8dp"
+               android:backgroundTint="@color/main3"
+               android:textColor="@color/black"
+               android:layout_marginEnd="10dp"/>
 
+           <!-- Remove Table Button -->
+           <Button
+               android:id="@+id/btnRemoveTable"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="Remove"
+               android:padding="8dp"
+               android:backgroundTint="@android:color/holo_red_dark"
+               android:textColor="@color/white" />
+
+
+
+       </LinearLayout>
+
+       <TextView
+           android:layout_width="150dp"
+           android:layout_marginTop="10dp"
+           android:text="Status : Occipied"
+           android:textColor="@color/black"
+           android:id="@+id/status"
+           android:gravity="center"
+           android:textSize="16sp"
+           android:background="@drawable/edit_text_effective"
+           android:layout_gravity="center"
+           android:layout_height="50dp" />
+
+       <!-- Table Number -->
 
    </LinearLayout>
 </LinearLayout>

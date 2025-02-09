@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_margin="8dp"
     android:padding="12dp"
-    android:background="@drawable/edit_text_bg">
+    android:background="@drawable/edit_text_effective">
 
     <TextView
         android:id="@+id/tableNoText"
@@ -54,7 +54,7 @@
             android:layout_marginRight="10dp"
             android:textColor="@color/white"
             android:text="Confirm"
-            android:backgroundTint="@color/main1"/>
+            android:backgroundTint="@color/main5"/>
 
         <Button
             android:id="@+id/rejectBtn"

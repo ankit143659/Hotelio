@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,7 +31,7 @@ class TableManagement : Fragment() {
     private lateinit var database: DatabaseReference
     private lateinit var userId: String
     private var tableCount = 0
-    private lateinit var share : SharePrefrence
+    private lateinit var share: SharePrefrence
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -44,7 +45,7 @@ class TableManagement : Fragment() {
         btnAddTable = view.findViewById(R.id.btnAddTable)
 
         database = FirebaseDatabase.getInstance().reference
-        userId = share.UserUid().toString()  // Replace with actual user ID fetching logic
+        userId = share.UserUid().toString()
 
         btnAddTable.setOnClickListener {
             showTableDialog()
@@ -56,17 +57,28 @@ class TableManagement : Fragment() {
     }
 
     private fun fetchStoredTables() {
-        database.child("hotels").child(userId).child("tables").get().addOnSuccessListener { snapshot ->
-            if (snapshot.exists()) {
-                snapshot.children.forEach { table ->
-                    val tableName = table.key ?: return@forEach
-                    val tableNumber = tableName.replace("Table", "").toIntOrNull() ?: return@forEach
-                    addTableView(tableNumber)
+        database.child("hotels").child(userId).child("tables").get()
+            .addOnSuccessListener { snapshot ->
+                Log.d("FirebaseDebug", "Fetched Data: ${snapshot.value}") // ✅ Debugging Log
+                if (snapshot.exists()) {
+                    snapshot.children.forEach { table ->
+                        val tableName = table.key ?: return@forEach
+                        val status = table.child("status").getValue(String::class.java)?:"Vacant"
+                        val tableNumber = tableName.replace("Table ", "").trim().toIntOrNull() // ✅ Fix Space Issue
+                        Log.d("FirebaseDebug", "Table Found: $tableName -> Number: $tableNumber") // ✅ Log Each Table
+                        if (tableNumber != null) {
+                            addTableView(tableNumber,status)
+                        }
+                    }
+                } else {
+                    Log.d("FirebaseDebug", "No tables found in Firebase.") // ✅ No Data Case
                 }
             }
-        }.addOnFailureListener {
-            Toast.makeText(requireContext(), "Failed to load tables", Toast.LENGTH_SHORT).show()
-        }
+            .addOnFailureListener {
+                Log.e("FirebaseError", "Failed to load tables", it) // ✅ Error Logging
+                Toast.makeText(requireContext(), "Failed to load tables", Toast.LENGTH_SHORT).show()
+            }
+
     }
 
     @SuppressLint("MissingInflatedId")
@@ -84,62 +96,56 @@ class TableManagement : Fragment() {
         btnAdd.setOnClickListener {
             val count = etTableCount.text.toString().toIntOrNull()
             if (count != null && count > 0) {
-                val tablesMap = mutableMapOf<String, Boolean>()
                 for (i in 1..count) {
                     val tableNumber = tableCount + i
-                    addTableView(tableNumber)
-                    tablesMap["Table$tableNumber"] = true  // Store table as a key in Firebase
+                    addTableView(tableNumber,"Vacant")
+
+                    val tableData = mapOf(
+                        "status" to "Vacant",
+                        "occupant" to mapOf("name" to "", "mobile" to "")
+                    )
+                    database.child("hotels").child(userId).child("tables").child("Table $tableNumber").setValue(tableData)
                 }
                 tableCount += count
-
-                // Store in Firebase under the user's hotel
-                database.child("hotels").child(userId).child("tables").setValue(tablesMap)
-                    .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Tables added successfully!", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener {
-                        Toast.makeText(requireContext(), "Failed to add tables", Toast.LENGTH_SHORT).show()
-                    }
-
                 dialog.dismiss()
             } else {
                 etTableCount.error = "Enter a valid number"
             }
         }
 
+        btnCancel.setOnClickListener{
+            dialog.dismiss()
+        }
+
         dialog.show()
     }
 
-    private fun addTableView(tableNumber: Int) {
+    @SuppressLint("MissingInflatedId")
+    private fun addTableView(tableNumber: Int, Status : String) {
         val tableView = LayoutInflater.from(requireContext()).inflate(R.layout.item_table, null, false)
         val tvTableName = tableView.findViewById<TextView>(R.id.tvTableNumber)
         val btnRemove = tableView.findViewById<Button>(R.id.btnRemoveTable)
         val btnGenerateQR = tableView.findViewById<Button>(R.id.btnGenerateQr)
 
+        val status = tableView.findViewById<TextView>(R.id.status)
+
+        status.setText("Status : $Status")
+
         tvTableName.text = "Table $tableNumber"
 
         btnRemove.setOnClickListener {
             tableContainer.removeView(tableView)
+            database.child("hotels").child(userId).child("tables").child("Table $tableNumber").removeValue()
         }
 
         btnGenerateQR.setOnClickListener {
-
-            val qrData = "https://ornate-kitten-246a60.netlify.app/?hotelUid=$userId&tableNo=$tableNumber"
+            val qrData = "https://flourishing-tarsier-3a2a4b.netlify.app/?hotelUid=$userId&tableNo=$tableNumber"
             val qrCodeBitmap = generateQRCode(qrData)
-
-            // Save the QR code to the gallery
             if (qrCodeBitmap != null) {
                 saveQRCodeToGallery(qrCodeBitmap)
             } else {
                 Toast.makeText(requireContext(), "Failed to generate QR code", Toast.LENGTH_SHORT).show()
             }
-            // Fetch hotel UID from Firebase
-            /*getHotelUidFromDatabase(userId, { hotelUid ->
-                // Generate the QR code URL
-
-            }, {
-                Toast.makeText(requireContext(), "Hotel not found for this user", Toast.LENGTH_SHORT).show()
-            })*/
         }
 
         tableContainer.addView(tableView)
@@ -178,21 +184,9 @@ class TableManagement : Fragment() {
         }
     }
 
-    // Fetch hotel UID from Firebase
-    private fun getHotelUidFromDatabase(userId: String, onSuccess: (String) -> Unit, onFailure: () -> Unit) {
-        database.child("users").child(userId).child("hotelUid").get().addOnSuccessListener {
-            val hotelUid = it.value as? String
-            if (hotelUid != null) {
-                onSuccess(hotelUid)
-            } else {
-                onFailure()
-            }
-        }.addOnFailureListener {
-            onFailure()
-        }
-    }
 
-    fun checkAndRequestPermissions() {
+
+fun checkAndRequestPermissions() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val permissions = mutableListOf<String>()
 
